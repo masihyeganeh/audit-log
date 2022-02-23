@@ -1,0 +1,23 @@
+version: "3.7"
+services:
+  datastore:
+    image: yandex/clickhouse-server
+    volumes:
+      - datastore_files:/var/lib/clickhouse
+      - ./clickhouse/config.xml:/etc/clickhouse-server/config.xml
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+
+  services:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - datastore
+    ports:
+      - "8088:80"
+
+volumes:
+  datastore_files:
